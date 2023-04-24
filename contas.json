@@ -2,16 +2,19 @@
     {
         "name": "Afonso",
         "school": "123",
-        "password": "123"
+        "password": "123",
+        "budcoins": 12
     },
     {
         "name": "Afonso2",
         "school": "123",
-        "password": "222"
+        "password": "222",
+        "budcoins": 0
     },
     {
         "name": "Afonso",
         "school": "Escola Secundaria Antonio Nobre",
-        "password": "123"
+        "password": "123",
+        "budcoins": 12
     }
 ]

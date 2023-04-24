@@ -6,7 +6,10 @@ import os
 import math
 import pygame.mixer
 from pygame.locals import *
+import json
 
+JsonFile = open("contas.json")
+JsonData = json.load(JsonFile)
 
 # Inicialição
 
@@ -38,6 +41,7 @@ blue = (0, 0, 255)
 dificuldade = 0
 velocidade = 1
 tempo = 0
+budcoin = 0
 
 # Imagens
 
@@ -51,6 +55,9 @@ tempo = 0
 
 def menu():
     run = True
+
+    budcoins = budcoin
+
     while run:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, red, (300, 300, 200, 50))
@@ -61,13 +68,26 @@ def menu():
         text = font.render("Continuar", True, black)
         screen.blit(text, (335, 235))
 
-        pygame.draw.rect(screen, blue, (300, 530, 200, 50))
-        text = font.render("Velocidade", True, black)
-        screen.blit(text, (327, 540))
+        if budcoins > 15:
+            pygame.draw.rect(screen, blue, (440, 530, 320, 50))
+            text = font.render("Velocidade (15 Coins)", True, black)
+            screen.blit(text, (452, 540))
+        else:
+            pygame.draw.rect(screen, red, (440, 530, 320, 50))
+            text = font.render("Velocidade (15 Coins)", True, black)
+            screen.blit(text, (452, 540))
 
-        pygame.draw.rect(screen, blue, (30, 530, 200, 50))
-        text = font.render("Dificuldade", True, black)
-        screen.blit(text, (55, 540))
+        if budcoins > 20:
+            pygame.draw.rect(screen, blue, (30, 530, 320, 50))
+            text = font.render("Dificuldade (20 Coins)", True, black)
+            screen.blit(text, (42, 540))
+        else:
+            pygame.draw.rect(screen, red, (30, 530, 320, 50))
+            text = font.render("Dificuldade (20 Coins)", True, black)
+            screen.blit(text, (42, 540))
+
+        text = font.render("Budcoins: " + str(budcoins), True, white)
+        screen.blit(text, (10, 10))
 
         pygame.display.update()
 
@@ -85,11 +105,19 @@ def menu():
                         pygame.quit()
                         sys.exit()
                     if 30 <= event.pos[0] <= 230 and 530 <= event.pos[1] <= 580:
-                        global dificuldade
-                        dificuldade += 1
+                        if budcoins > 20:
+                            global dificuldade
+                            dificuldade += 1
+                            budcoins -= 20
+                        else:
+                            print("Sem coins suficientes")
                     if 300 <= event.pos[0] <= 500 and 530 <= event.pos[1] <= 580:
-                        global velocidade
-                        velocidade += 1
+                        if budcoins > 15:
+                            global velocidade
+                            velocidade += 1
+                            budcoins -= 20
+                        else:
+                            print("Sem coins suficientes")
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
@@ -234,11 +262,11 @@ def game():
             
             if timer == 0:
                 screen.fill((0, 0, 0))
-                alert = font.render("Você perdeu!", True, white)
+                alert = font.render("Você ganhou!", True, white)
                 screen.blit(alert, (300, 300))
                 pygame.display.update()
                 time.sleep(3)
-                death()
+                menu()
 
 
             clock.tick(fps)
@@ -262,9 +290,19 @@ def game():
             if timer >= 540 and timer <= 600:
                 alert = font.render("10s", True, white)
                 screen.blit(alert, (50, 50))
+                if timer == 540:
+                    global budcoin
+                    budcoin += 2
+                alert_sound = pygame.mixer.Sound("beep.wav")
+                alert_sound.play()
+                alert_sound.set_volume(0.1)
+                receive_budcoin = font.render("+2 BudCoins ", True, white)
+                screen.blit(receive_budcoin, (10, 10))
             if timer >= 480 and timer <= 540:
                 alert = font.render("9s", True, white)
                 screen.blit(alert, (50, 50))
+                receive_budcoin = font.render("+2 BudCoins ", True, black)
+                screen.blit(receive_budcoin, (10, 10))
             if timer >= 420 and timer <= 480:
                 alert = font.render("8s", True, white)
                 screen.blit(alert, (50, 50))
@@ -277,9 +315,18 @@ def game():
             if timer >= 240 and timer <= 300:
                 alert = font.render("5s", True, white)
                 screen.blit(alert, (50, 50))
+                if timer == 240:
+                    budcoin += 2
+                alert_sound = pygame.mixer.Sound("beep.wav")
+                alert_sound.play()
+                alert_sound.set_volume(0.1)
+                receive_budcoin = font.render("+2 BudCoins ", True, white)
+                screen.blit(receive_budcoin, (10, 10))
             if timer >= 180 and timer <= 240:
                 alert = font.render("4s", True, white)
                 screen.blit(alert, (50, 50))
+                receive_budcoin = font.render("+2 BudCoins ", True, black)
+                screen.blit(receive_budcoin, (10, 10))
             if timer >= 120 and timer <= 180:
                 alert = font.render("3s", True, white)
                 screen.blit(alert, (50, 50))
