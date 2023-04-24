@@ -188,7 +188,7 @@ class MainMenu:
                     self.title.grid(row=0, column=0, columnspan=10, pady=10, padx=10)
                     self.title.config(bg="lightblue")
 
-                    self.sair_button = ttk.Button(self.frame_principal, text="Sair", font=("Arial", 10), command=self.sair)
+                    self.sair_button = ttk.Button(self.frame_principal, text="Sair", font=("Arial", 10), command=self.__init__)
                     self.sair_button.grid(row=4, column=0)
                     self.sair_button.config(width=8, bg="lightblue", cursor="hand2")
 

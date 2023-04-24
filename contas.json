@@ -8,5 +8,10 @@
         "name": "Afonso2",
         "school": "123",
         "password": "222"
+    },
+    {
+        "name": "Afonso",
+        "school": "Escola Secundaria Antonio Nobre",
+        "password": "123"
     }
 ]
