@@ -20,8 +20,6 @@ red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
 
-dificuldade = 0
-velocidade = 1
 tempo = 0
 budcoin = 0
 
@@ -121,7 +119,10 @@ class MainMenu:
                 data.append({
                     "name": name,
                     "school": school,
-                    "password": password
+                    "password": password,
+                    "budcoins": 0,
+                    "velocidade": 0,
+                    "dificuldade": 0
                 })
             with open("contas.json", "w") as file:
                 json.dump(data, file, indent=4)
@@ -195,6 +196,7 @@ class MainMenu:
                     NAMELOGGED = i["name"]
                     PASSLOGGED = i["password"]
 
+
                     self.master.destroy()
                     self.principal()
 
@@ -245,6 +247,11 @@ class MainMenu:
 
         # Variáveis
 
+        global backmusic
+        backmusic = pygame.mixer.Sound("backmusic2.wav")
+        backmusic.play(loops=-1)
+        backmusic.set_volume(0.1)
+
         clock = pygame.time.Clock()
         fps = 60
         font = pygame.font.SysFont("Arial", 30)
@@ -290,7 +297,7 @@ class MainMenu:
                     text = font.render("Velocidade (15 Coins)", True, black)
                     screen.blit(text, (452, 540))
 
-                if budcoins > 20:
+                if budcoins >= 20:
                     pygame.draw.rect(screen, blue, (30, 530, 320, 50))
                     text = font.render("Dificuldade (20 Coins)", True, black)
                     screen.blit(text, (42, 540))
@@ -314,23 +321,35 @@ class MainMenu:
                             if 300 <= event.pos[0] <= 500 and 230 <= event.pos[1] <= 280:
                                 print("Play")
                                 run = False
+
                             if 300 <= event.pos[0] <= 500 and 300 <= event.pos[1] <= 350:
                                 pygame.quit()
                                 sys.exit()
+
                             if 30 <= event.pos[0] <= 230 and 530 <= event.pos[1] <= 580:
-                                if budcoins > 20:
+                                if budcoins >= 20:
                                     global dificuldade
                                     dificuldade += 1
-                                    budcoins -= 20
-                                else:
-                                    print("Sem coins suficientes")
+                                    with open("contas.json", "r") as file:
+                                        data = json.load(file)
+                                        for i in data:
+                                            if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                                                i["budcoins"] -= 20
+                                                i["dificuldade"] += 1
+                                                with open("contas.json", "w") as file:
+                                                    json.dump(data, file, indent=4)
+
                             if 300 <= event.pos[0] <= 500 and 530 <= event.pos[1] <= 580:
-                                if budcoins > 15:
+                                if budcoins >= 15:
                                     global velocidade
-                                    velocidade += 1
-                                    budcoins -= 20
-                                else:
-                                    print("Sem coins suficientes")
+                                    with open("contas.json", "r") as file:
+                                        data = json.load(file)
+                                        for i in data:
+                                            if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                                                i["budcoins"] -= 15
+                                                i["velocidade"] += 1
+                                                with open("contas.json", "w") as file:
+                                                    json.dump(data, file, indent=4)
 
         class Player(pygame.sprite.Sprite):
             def __init__(self, x, y, width, height):
@@ -343,7 +362,14 @@ class MainMenu:
                 self.rect.y = y
 
             def update(self):
-                if velocidade == 1:
+                with open("contas.json", "r") as file:
+                    data = json.load(file)
+                    for i in data:
+                        if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                            global velocidade
+                            velocidade = i["velocidade"]
+
+                if velocidade == 0:
                     if keys["right"]:
                         self.rect.x += 1
                     if keys["left"]:
@@ -352,6 +378,15 @@ class MainMenu:
                         self.rect.y -= 1
                     if keys["down"]:
                         self.rect.y += 1
+                if velocidade == 1:
+                    if keys["right"]:
+                        self.rect.x += 2
+                    if keys["left"]:
+                        self.rect.x -= 2
+                    if keys["up"]:
+                        self.rect.y -= 2
+                    if keys["down"]:
+                        self.rect.y += 2
                 if velocidade == 2:
                     if keys["right"]:
                         self.rect.x += 2
@@ -361,7 +396,6 @@ class MainMenu:
                         self.rect.y -= 2
                     if keys["down"]:
                         self.rect.y += 2
-                
 
                 # verifica se o jogador passou do limite da tela esquerda
                 if self.rect.x < 0 - self.rect.width:
@@ -401,8 +435,6 @@ class MainMenu:
                 if self.rect.y < 0:
                     self.rect.y = 0
 
-
-
         def death():
             run = True
             while run:
@@ -431,6 +463,87 @@ class MainMenu:
                                 pygame.quit()
                                 sys.exit()
 
+        def win():
+            run = True
+
+            with open("contas.json", "r") as file:
+                data = json.load(file)
+                for i in data:
+                    if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                        global budcoins
+                        budcoins = i["budcoins"]
+
+            while run:
+                screen.fill((0, 0, 0))
+                pygame.draw.rect(screen, red, (300, 300, 200, 50))
+                text = font.render("Sair", True, black)
+                screen.blit(text, (370, 305))
+
+                pygame.draw.rect(screen, green, (300, 230, 200, 50))
+                text = font.render("Continuar", True, black)
+                screen.blit(text, (335, 235))
+
+                if budcoins > 15:
+                    pygame.draw.rect(screen, blue, (440, 530, 320, 50))
+                    text = font.render("Velocidade (15 Coins)", True, black)
+                    screen.blit(text, (452, 540))
+                else:
+                    pygame.draw.rect(screen, red, (440, 530, 320, 50))
+                    text = font.render("Velocidade (15 Coins)", True, black)
+                    screen.blit(text, (452, 540))
+
+                if budcoins >= 20:
+                    pygame.draw.rect(screen, blue, (30, 530, 320, 50))
+                    text = font.render("Dificuldade (20 Coins)", True, black)
+                    screen.blit(text, (42, 540))
+                else:
+                    pygame.draw.rect(screen, red, (30, 530, 320, 50))
+                    text = font.render("Dificuldade (20 Coins)", True, black)
+                    screen.blit(text, (42, 540))
+
+                text = font.render("Budcoins: " + str(budcoins), True, white)
+                screen.blit(text, (10, 10))
+
+                pygame.display.update()
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.button == 1:
+                            if 300 <= event.pos[0] <= 500 and 230 <= event.pos[1] <= 280:
+                                print("Play")
+                                game()
+
+                            if 300 <= event.pos[0] <= 500 and 300 <= event.pos[1] <= 350:
+                                pygame.quit()
+                                sys.exit()
+
+                            if 30 <= event.pos[0] <= 230 and 530 <= event.pos[1] <= 580:
+                                if budcoins >= 20:
+                                    with open("contas.json", "r") as file:
+                                        data = json.load(file)
+                                        for i in data:
+                                            if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                                                i["budcoins"] -= 20
+                                                i["dificuldade"] += 1
+                                                with open("contas.json", "w") as file:
+                                                    json.dump(data, file, indent=4)
+
+                            if 300 <= event.pos[0] <= 500 and 530 <= event.pos[1] <= 580:
+                                if budcoins >= 15:
+                                    with open("contas.json", "r") as file:
+                                        data = json.load(file)
+                                        for i in data:
+                                            if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                                                i["budcoins"] -= 15
+                                                i["velocidade"] += 1
+                                                with open("contas.json", "w") as file:
+                                                    json.dump(data, file, indent=4)
+                                        
+
         def game():
             run = True
             
@@ -443,6 +556,12 @@ class MainMenu:
             }
 
             player = Player(400, 300, 50, 50)
+
+            with open("contas.json", "r") as file:
+                data = json.load(file)
+                for i in data:
+                    if NAMELOGGED == i["name"] and PASSLOGGED == i["password"]:
+                        dificuldade = i["dificuldade"]
 
             if dificuldade == 0:
 
@@ -479,7 +598,7 @@ class MainMenu:
                         screen.blit(alert, (300, 300))
                         pygame.display.update()
                         time.sleep(3)
-                        menu()
+                        win()
 
 
                     clock.tick(fps)
@@ -1104,11 +1223,6 @@ class MainMenu:
                 enemy8 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
                 enemy9 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
                 enemy10 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
-                enemy11 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
-                enemy12 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
-                enemy13 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
-                enemy14 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
-                enemy15 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
 
                 timer = 900 # 15 segundos
 
@@ -1140,11 +1254,6 @@ class MainMenu:
                     all_sprites.add(enemy8)
                     all_sprites.add(enemy9)
                     all_sprites.add(enemy10)
-                    all_sprites.add(enemy11)
-                    all_sprites.add(enemy12)
-                    all_sprites.add(enemy13)
-                    all_sprites.add(enemy14)
-                    all_sprites.add(enemy15)
 
                     all_sprites.update()
                     all_sprites.draw(screen)
@@ -1160,11 +1269,6 @@ class MainMenu:
                     enemy8.Enemy_move(player.rect)
                     enemy9.Enemy_move(player.rect)
                     enemy10.Enemy_move(player.rect)
-                    enemy11.Enemy_move(player.rect)
-                    enemy12.Enemy_move(player.rect)
-                    enemy13.Enemy_move(player.rect)
-                    enemy14.Enemy_move(player.rect)
-                    enemy15.Enemy_move(player.rect)
 
                     for event in pygame.event.get():
                             if event.type == pygame.KEYDOWN:
@@ -1224,16 +1328,6 @@ class MainMenu:
                     if player.rect.colliderect(enemy9.rect):
                         death()
                     if player.rect.colliderect(enemy10.rect):
-                        death()
-                    if player.rect.colliderect(enemy11.rect):
-                        death()
-                    if player.rect.colliderect(enemy12.rect):
-                        death()
-                    if player.rect.colliderect(enemy13.rect):
-                        death()
-                    if player.rect.colliderect(enemy14.rect):
-                        death()
-                    if player.rect.colliderect(enemy15.rect):
                         death()
             
                     if enemy.rect.colliderect(enemy1.rect):
@@ -1356,66 +1450,6 @@ class MainMenu:
                         enemy9.rect.x = enemy9.rect.x + 1
                         enemy9.rect.y = enemy9.rect.y + 1
 
-                    if enemy10.rect.colliderect(enemy11.rect):
-                        enemy10.rect.x = enemy10.rect.x + 1
-                        enemy10.rect.y = enemy10.rect.y + 1
-
-                    if enemy10.rect.colliderect(enemy12.rect):
-                        enemy10.rect.x = enemy10.rect.x + 1
-                        enemy10.rect.y = enemy10.rect.y + 1
-
-                    if enemy10.rect.colliderect(enemy13.rect):
-                        enemy10.rect.x = enemy10.rect.x + 1
-                        enemy10.rect.y = enemy10.rect.y + 1
-
-                    if enemy10.rect.colliderect(enemy14.rect):
-                        enemy10.rect.x = enemy10.rect.x + 1
-                        enemy10.rect.y = enemy10.rect.y + 1
-
-                    if enemy10.rect.colliderect(enemy15.rect):
-                        enemy10.rect.x = enemy10.rect.x + 1
-                        enemy10.rect.y = enemy10.rect.y + 1
-
-                    if enemy11.rect.colliderect(enemy12.rect):
-                        enemy11.rect.x = enemy11.rect.x + 1
-                        enemy11.rect.y = enemy11.rect.y + 1
-
-                    if enemy11.rect.colliderect(enemy13.rect):
-                        enemy11.rect.x = enemy11.rect.x + 1
-                        enemy11.rect.y = enemy11.rect.y + 1
-
-                    if enemy11.rect.colliderect(enemy14.rect):
-                        enemy11.rect.x = enemy11.rect.x + 1
-                        enemy11.rect.y = enemy11.rect.y + 1
-
-                    if enemy11.rect.colliderect(enemy15.rect):
-                        enemy11.rect.x = enemy11.rect.x + 1
-                        enemy11.rect.y = enemy11.rect.y + 1
-
-                    if enemy12.rect.colliderect(enemy13.rect):
-                        enemy12.rect.x = enemy12.rect.x + 1
-                        enemy12.rect.y = enemy12.rect.y + 1
-
-                    if enemy12.rect.colliderect(enemy14.rect):
-                        enemy12.rect.x = enemy12.rect.x + 1
-                        enemy12.rect.y = enemy12.rect.y + 1
-
-                    if enemy12.rect.colliderect(enemy15.rect):
-                        enemy12.rect.x = enemy12.rect.x + 1
-                        enemy12.rect.y = enemy12.rect.y + 1
-
-                    if enemy13.rect.colliderect(enemy14.rect):
-                        enemy13.rect.x = enemy13.rect.x + 1
-                        enemy13.rect.y = enemy13.rect.y + 1
-
-                    if enemy13.rect.colliderect(enemy15.rect):
-                        enemy13.rect.x = enemy13.rect.x + 1
-                        enemy13.rect.y = enemy13.rect.y + 1
-
-                    if enemy14.rect.colliderect(enemy15.rect):
-                        enemy14.rect.x = enemy14.rect.x + 1
-                        enemy14.rect.y = enemy14.rect.y + 1
-
                     pygame.display.update()
                     clock.tick(300)
 
@@ -1434,6 +1468,10 @@ class MainMenu:
                 pygame.draw.rect(screen, green, (300, 230, 200, 50))
                 text = font.render("Play", True, black)
                 screen.blit(text, (370, 235))
+
+                # pygame.draw.rect(screen, green, (100, 100, 200, 50))
+                # text = font.render("Mute", True, black)
+                # screen.blit(text, (100, 100))
                 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -1448,7 +1486,10 @@ class MainMenu:
                             if 300 <= event.pos[0] <= 500 and 300 <= event.pos[1] <= 350:
                                 pygame.quit()
                                 sys.exit()
-                
+                            # if 100 <= event.pos[0] <= 300 and 100 <= event.pos[1] <= 150:
+                            #     print("Mute")
+
+
                 pygame.display.update()
 
             pygame.quit()
