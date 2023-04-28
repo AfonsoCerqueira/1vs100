@@ -3,8 +3,36 @@
         "name": "Afonso",
         "school": "Antonio Nobre",
         "password": "123",
-        "budcoins": 10,
+        "budcoins": 276,
         "velocidade": 2,
-        "dificuldade": 0
+        "dificuldade": 0,
+        "permissao": 0
+    },
+    {
+        "name": "admin",
+        "school": "Admin Test",
+        "password": "321ddadmin",
+        "budcoins": 4,
+        "velocidade": 0,
+        "dificuldade": 0,
+        "permissao": 1
+    },
+    {
+        "name": "Afonso31231",
+        "school": "Testeteste",
+        "password": "teste",
+        "budcoins": 0,
+        "velocidade": 0,
+        "dificuldade": 0,
+        "permissao": 0
+    },
+    {
+        "name": "AfonsoTeste2",
+        "school": "312313",
+        "password": "31231",
+        "budcoins": 0,
+        "velocidade": 0,
+        "dificuldade": 0,
+        "permissao": 1
     }
 ]
