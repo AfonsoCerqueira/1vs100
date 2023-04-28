@@ -397,9 +397,27 @@ class MainMenu:
                 p += 1
                 self.tree.insert("", 0, text=p, values=(i['name'], i['password'], i['permissao']))
 
+        self.del_button = tk.Button(self.frame_master, text="Deletar Conta", font=("Arial", 10), command=self.deleteacc)
+        self.del_button.grid(row=6, column=0, columnspan=2, pady=10, padx=10)
+        self.del_button.config(bg="lightblue")
+
+    def deleteacc(self):
+        tree_selection = self.tree.selection()[-1]
+        tree_selection_index = self.tree.index(tree_selection)
+        self.tree.delete(tree_selection)
+
+        print(tree_selection_index)
+        
+        #with open("contas.json", "r") as file:
+        #    data = json.load(file)
+        #    data.pop(tree_selection_index)
+
+        #with open("contas.json", "w") as file:
+        #    json.dump(data, file, indent=4)
+
 
     def jogar(self):
-        self.master.iconify()
+        self.master.destroy()
         pygame.init()
         pygame.mixer.init()
         pygame.font.init()
