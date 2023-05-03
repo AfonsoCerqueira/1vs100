@@ -10,7 +10,7 @@ Tkinter (Versão mais recente)
 
 ## 🛠️ Construído com
 
-* [Visual Studio Code ](http://www.vscode.com) - Editor de Texto usado
+* [Visual Studio Code ]([http://www.vscode.com](https://code.visualstudio.com/)) - Editor de Texto usado
 * [Python](https://python.org/) - Linguagem Usada no Projeto
 
 ## ✒️ Autores
