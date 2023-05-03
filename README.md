@@ -12,7 +12,6 @@ Tkinter (Versão mais recente)
 
 * [Visual Studio Code ](http://www.vscode.com) - Editor de Texto usado
 * [Python](https://python.org/) - Linguagem Usada no Projeto
-* [JSON] - Usado para guardar dados.
 
 ## ✒️ Autores
 
