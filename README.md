@@ -15,7 +15,7 @@ Tkinter (Versão mais recente)
 
 ## ✒️ Autores
 
-* **Texugo** - *Desenvolvedor do Projeto* - [umdesenvolvedor](https://github.com/Texugooo)
+* **Texugo** - *Desenvolvedor do Projeto* - [Texugooo](https://github.com/Texugooo)
 
 ## 📄 Licença
 
