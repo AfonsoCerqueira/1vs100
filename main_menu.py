@@ -249,7 +249,7 @@ class MainMenu:
 
     def adminmenu(self):
         self.master = tk.Tk()
-        self.master.title("Menu Principal")
+        self.master.title("Admin Menu")
         self.master.geometry("600x500")
         self.master.resizable(False, False)
         self.master.config(bg="lightblue")
@@ -277,7 +277,7 @@ class MainMenu:
 
     def createadm(self):
         self.master = tk.Tk()
-        self.master.title("Register")
+        self.master.title("Register Admin")
         self.master.geometry("600x500")
         self.master.resizable(False, False)
         self.master.config(bg="lightblue")
@@ -369,7 +369,7 @@ class MainMenu:
 
     def seeacc(self):
         self.master = tk.Tk()
-        self.master.title("Menu Principal")
+        self.master.title("Contas")
         self.master.geometry("800x500")
         self.master.resizable(False, False)
         self.master.config(bg="lightblue")
@@ -389,12 +389,16 @@ class MainMenu:
         self.tree.heading("#3", text="Permissão")
         self.tree.grid(row=4, column=0, columnspan=2)
 
-        p = 0
+        with open("contas.json", "r") as file:
+            data = json.load(file)
+
+        p = len(data)
+        p += 1
 
         with open("contas.json", "r") as file:
             data = json.load(file)
-            for i in data:
-                p += 1
+            for i in reversed(data):
+                p -= 1
                 self.tree.insert("", 0, text=p, values=(i['name'], i['password'], i['permissao']))
 
         self.del_button = tk.Button(self.frame_master, text="Deletar Conta", font=("Arial", 10), command=self.deleteacc)
@@ -408,12 +412,12 @@ class MainMenu:
 
         print(tree_selection_index)
         
-        #with open("contas.json", "r") as file:
-        #    data = json.load(file)
-        #    data.pop(tree_selection_index)
+        with open("contas.json", "r") as file:
+            data = json.load(file)
+            data.pop(tree_selection_index)
 
-        #with open("contas.json", "w") as file:
-        #    json.dump(data, file, indent=4)
+        with open("contas.json", "w") as file:
+            json.dump(data, file, indent=4)
 
 
     def jogar(self):
