@@ -767,6 +767,8 @@ class MainMenu:
                 enemy1 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
                 enemy2 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
 
+                coin = pygame.image.load("coin.png")
+
                 pos1 = random.randint(0,800)
                 pos2 = random.randint(0,600)
                 pos3 = random.randint(0,800)
@@ -800,7 +802,8 @@ class MainMenu:
                     if timer >= 780 and timer <= 840:
                         alert = font.render("14s", True, white)
                         screen.blit(alert, (50, 50))
-                        if player.rect.colliderect(pygame.draw.circle(screen, green, (pos1, pos2), 15, 4)):
+                        #if player.rect.colliderect(pygame.draw.circle(screen, green, (pos1, pos2), 15, 4)):
+                        if player.rect.colliderect(screen.blit(coin, (pos1, pos2))):
                             if timer == 900:
                                 pass
                             if timer < 900:
@@ -842,7 +845,7 @@ class MainMenu:
                     if timer >= 420 and timer <= 480:
                         alert = font.render("8s", True, white)
                         screen.blit(alert, (50, 50))
-                        if player.rect.colliderect(pygame.draw.circle(screen, green, (pos3, pos4), 15, 4)):
+                        if player.rect.colliderect(screen.blit(coin, (pos3, pos4))):
                             if timer == 900:
                                 pass
                             if timer < 900:
