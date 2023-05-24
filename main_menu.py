@@ -197,7 +197,6 @@ class MainMenu:
                     NAMELOGGED = i["name"]
                     PASSLOGGED = i["password"]
 
-
                     self.master.destroy()
                     self.principal()
 
@@ -434,24 +433,17 @@ class MainMenu:
 
         # Variáveis
 
-        global backmusic
-        backmusic = pygame.mixer.Sound("backmusic2.wav")
-        backmusic.play(loops=-1)
-        backmusic.set_volume(0.1)
 
         clock = pygame.time.Clock()
         fps = 60
         font = pygame.font.SysFont("Arial", 30)
 
-        # Cores
-
-        # Imagens
-
-        ## Por enquanto não tem
-
         # Sons
 
-        ## Por enquanto não tem
+        global backmusic
+        backmusic = pygame.mixer.Sound("backmusic2.wav")
+        backmusic.play(loops=-1)
+        backmusic.set_volume(0.1)
 
         # Classes
 
