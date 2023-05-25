@@ -427,6 +427,8 @@ class MainMenu:
 
         # Tamanho da tela
 
+        screen_width = 800
+        screen_height = 600
         screen = pygame.display.set_mode((800, 600))
         screen.fill((0, 0, 0))
         pygame.display.set_caption("1 vs 100")
@@ -760,6 +762,8 @@ class MainMenu:
                 enemy2 = Enemy(random.randint(0, 800), random.randint(0, 600), 50, 50)
 
                 coin = pygame.image.load("coin.png")
+                earth = pygame.image.load("world.png")
+                earth_img = pygame.transform.scale(earth, (screen_width/2, screen_height/2))
 
                 pos1 = random.randint(0,800)
                 pos2 = random.randint(0,600)
@@ -785,7 +789,8 @@ class MainMenu:
 
 
                     clock.tick(fps)
-                    screen.fill((0, 0, 0))
+                    screen.fill((0,0,0))
+                    screen.blit(earth_img, (100,300))
 
                     if timer >= 840 and timer <= 900:
                         alert = font.render("15s", True, white)

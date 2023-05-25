@@ -3,7 +3,7 @@
         "name": "admin",
         "school": "Admin Test",
         "password": "321ddadmin",
-        "budcoins": 34,
+        "budcoins": 48,
         "velocidade": 0,
         "dificuldade": 0,
         "permissao": 1
